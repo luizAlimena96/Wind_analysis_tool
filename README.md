@@ -21,8 +21,11 @@ SQLite database (turbine_data.db) containing turbine data
 # Usage
 
 Install the required Python packages: pip install -r requirements.txt
+
 Run the application: python wind_analysis.py
+
 Select a wind turbine, input relevant parameters, and click the "Calcular" button.
+
 View the generated graphs and analysis results.
 
 # Screenshots
