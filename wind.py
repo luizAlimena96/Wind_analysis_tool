@@ -145,7 +145,7 @@ def on_submit():
 # CRIANDO O GUI
 
 root = tk.Tk()
-root.title("Wind-UFRGS")
+root.title("Wind Turbine Analysis Tool")
 
 c = conn.cursor()
 c.execute("SELECT name FROM turbine_data")
