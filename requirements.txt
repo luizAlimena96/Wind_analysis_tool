@@ -1,0 +1,13 @@
+# requirements.txt
+
+# General dependencies
+numpy==1.21.2
+matplotlib==3.4.3
+Pillow==8.2.0
+
+# GUI
+tk==8.6.11
+ttkthemes==3.0.0
+
+# Database
+sqlite==3.36.0
