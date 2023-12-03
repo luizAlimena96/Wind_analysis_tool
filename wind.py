@@ -1,10 +1,12 @@
 import tkinter as tk
+from tkinter import *
 from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import numpy as np
 import sqlite3
-
+from PIL import Image, ImageTk
+import io
 
 # CONECTANDO COM O DATABASE
 
@@ -136,76 +138,94 @@ def on_submit():
 
     plt.subplots_adjust(hspace=0.5)
 
-    canvas = FigureCanvasTkAgg(fig, master=root)
+    canvas = FigureCanvasTkAgg(fig, master=second_frame)
     canvas_widget = canvas.get_tk_widget()
     canvas_widget.grid(row=10, column=0, columnspan=2, pady=30)
-
 
 # CRIANDO O GUI
 
 root = tk.Tk()
 root.title("Wind Turbine Analysis Tool")
+root.geometry("600x800")
+
+main_frame = Frame(root)
+main_frame.pack(fill=BOTH, expand=1)
+
+my_canvas = Canvas(main_frame)
+my_canvas.pack(side=LEFT, fill=BOTH, expand=1)
+
+my_scrollbar = ttk.Scrollbar(main_frame, orient=VERTICAL, command=my_canvas.yview)
+my_scrollbar.pack(side=RIGHT, fill=Y)
+
+my_canvas.configure(yscrollcommand=my_scrollbar.set)
+my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all")))
+
+second_frame = Frame(my_canvas)
+
+my_canvas.create_window((0,0), window=second_frame, anchor="nw")
+
+
 
 c = conn.cursor()
 c.execute("SELECT name FROM turbine_data")
 turbine_names = [row[0] for row in c.fetchall()]
 
-combo = ttk.Combobox(root, values=turbine_names, state="readonly")
+combo = ttk.Combobox(second_frame, values=turbine_names, state="readonly")
 combo.grid(row=5, column=0, padx=10, pady=10)
 combo.set("Selecione a turbina")
 
-label1 = tk.Label(root, text="Velocidade média do vento:")
+label1 = tk.Label(second_frame, text="Velocidade média do vento:")
 label1.grid(row=0, column=0, padx=10, pady=10)
 
-label1_1 = tk.Label(root, text="m/s")
+label1_1 = tk.Label(second_frame, text="m/s")
 label1_1.grid(row=0, column=2)
 
-label2 = tk.Label(root, text="Altura da medição:")
+label2 = tk.Label(second_frame, text="Altura da medição:")
 label2.grid(row=1, column=0, padx=10, pady=10)
 
-label2_1 = tk.Label(root, text="m")
+label2_1 = tk.Label(second_frame, text="m")
 label2_1.grid(row=1, column=2)
 
-label3 = tk.Label(root, text="Massa especifica media:")
+label3 = tk.Label(second_frame, text="Massa especifica media:")
 label3.grid(row=2, column=0, padx=10, pady=10)
 
-label3_1 = tk.Label(root, text="kg/m³")
+label3_1 = tk.Label(second_frame, text="kg/m³")
 label3_1.grid(row=2, column=2)
 
-label4 = tk.Label(root, text="Altura de rugosidade:")
+label4 = tk.Label(second_frame, text="Altura de rugosidade:")
 label4.grid(row=3, column=0, padx=10, pady=10)
 
-label4_1 = tk.Label(root, text="m")
+label4_1 = tk.Label(second_frame, text="m")
 label4_1.grid(row=3, column=2)
 
-label5 = tk.Label(root, text="Fator de forma de Weibull:")
+label5 = tk.Label(second_frame, text="Fator de forma de Weibull:")
 label5.grid(row=4, column=0, padx=10, pady=10)
 
-entry_v_medio = tk.Entry(root)
+entry_v_medio = tk.Entry(second_frame)
 entry_v_medio.grid(row=0, column=1, padx=10, pady=10)
 
-entry_med = tk.Entry(root)
+entry_med = tk.Entry(second_frame)
 entry_med.grid(row=1, column=1, padx=10, pady=10)
 
-entry_ro = tk.Entry(root)
+entry_ro = tk.Entry(second_frame)
 entry_ro.grid(row=2, column=1, padx=10, pady=10)
 
-entry_h_ru = tk.Entry(root)
+entry_h_ru = tk.Entry(second_frame)
 entry_h_ru.grid(row=3, column=1, padx=10, pady=10)
 
-entry_wei = tk.Entry(root)
+entry_wei = tk.Entry(second_frame)
 entry_wei.grid(row=4, column=1, padx=10, pady=10)
 
-eap_raw_display = tk.Label(root, text="EAP Bruta:")
+eap_raw_display = tk.Label(second_frame, text="EAP Bruta:")
 eap_raw_display.grid(row=6, column=0, columnspan=2, pady=1)
 
-factor_cap_raw_display = tk.Label(root, text="Fator de Capacidade - Bruto:")
+factor_cap_raw_display = tk.Label(second_frame, text="Fator de Capacidade - Bruto:")
 factor_cap_raw_display.grid(row=7, column=0, columnspan=2, pady=1)
 
-pot_med_raw_display = tk.Label(root, text="Potência média anual:")
+pot_med_raw_display = tk.Label(second_frame, text="Potência média anual:")
 pot_med_raw_display.grid(row=8, column=0, columnspan=2, pady=1)
 
-submit_button = tk.Button(root, text="Calcular", command=on_submit)
+submit_button = tk.Button(second_frame, text="Calcular", command=on_submit)
 submit_button.grid(row=9, column=0, columnspan=2, pady=10)
 
 root.mainloop()
