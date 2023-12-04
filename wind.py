@@ -5,7 +5,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import numpy as np
 import sqlite3
-from PIL import Image, ImageTk
 import io
 
 # CONECTANDO COM O DATABASE
